@@ -1,0 +1,45 @@
+*** Settings ***
+Documentation     *This is the resource file of the Top Menu.*
+...
+...               The *keywords* and *locators* defined in this file are used to test the *Top Menu componenet* and its subcomponents (logo, search field, cart and tab menu).
+Resource          ../main.txt
+
+*** Variables ***
+${loc_a_shoppingCartWidget_cTopMenu}    css=div.shopping_cart>a    #Finds the shopping cart widget on the Top Menu.
+${loc_span_shoppingCartQuantity_cTopMenu}    css=div.shopping_cart>a>span.ajax_cart_quantity
+${loc_span_shoppingCartTotal_cTopMenu}    css=div.shopping_cart>a>span.ajax_cart_total
+${loc_span_shoppingCartEmptyLabel_cTopMenu}    css=div.shopping_cart>a>span.ajax_cart_no_product    #Finds the Empty label in the shopping cart widget on the Top Menu.
+${loc_dl_shoppingCart_dropDownList_cTopMenu}    css=dl.products    #Finds the drop-down list with the elements of the cart. This list is displayed when hovering the mouse over the Cart Widget.
+${loc_a_womenTab_cTopMenu}    xpath=//div[@id='block_top_menu']//a[@title='Women']    #Finds the Women Tab on the Top Menu.
+
+*** Keywords ***
+Click Shopping Cart Widget Link On TopMenu
+    [Documentation]    Clicks on the Cancel button and closes the multichooser.
+    Wait Until Element Is Visible    ${loc_a_shoppingCartWidget_cTopMenu}    ${WAIT}    Fail= Shopping Cart is not visible on the Top Menu.
+    Click Element    ${loc_a_shoppingCartWidget_cTopMenu}
+
+Get Number Of Items In Shopping Cart Widget On TopMenu
+    [Documentation]    Returns the number of items in the shoping cart.
+    Wait Until Element Is Visible    ${loc_a_shoppingCartWidget_cTopMenu}    ${WAIT}    Fail= Shopping Cart is not visible on the Top Menu.
+    Page Should Contain Element    ${loc_span_shoppingCartQuantity_cTopMenu}    ${WAIT}
+    ${quantity}=    Get Value    ${loc_span_shoppingCartQuantity_cTopMenu}
+    Return From Keyword    ${quantity}
+
+Verify If Shopping Cart Widget Is Empty On TopMenu
+    [Documentation]    Verifies if the shopping cart widget is empty. It executes the following steps to make sure the cart is empty:
+    ...    1- Verifies if the Empty label is displayed.
+    ...    2- Verifies if the cart widget does not contain the drop-down list (This list is displayed when hovering the mouse over the Cart Widget.)
+    ...    3- Verifies if the variable loc_span_shoppingCartTotal_cTopMenu is 0.
+    Wait Until Element Is Visible    ${loc_a_shoppingCartWidget_cTopMenu}    ${WAIT}    Fail=Shopping Cart is not visible on the Top Menu
+    ${spanElement}=    Get WebElement    ${loc_span_shoppingCartEmptyLabel_cTopMenu}
+    ${spanContent}=    Get Text    ${spanElement}
+    Should Be Equal As Strings    ${spanContent}    (empty)    Fail=The (empty) label is not displayd on the cart widget.
+    Sleep    2s
+    Page Should Not Contain    ${loc_dl_shoppingCart_dropDownList_cTopMenu}
+    #loc_span_shoppingCartTotal_cTopMenu should be 0
+    Return From Keyword    True
+
+Click Women Tab On TopMenu
+    [Documentation]    Clicks on the Women tab.
+    Wait Until Element Is Visible    ${loc_a_womenTab_cTopMenu}    ${WAIT}    Fail= The Women Tab is not visible on the Top Menu.
+    Click Element    ${loc_a_womenTab_cTopMenu}

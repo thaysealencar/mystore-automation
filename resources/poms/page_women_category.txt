@@ -1,0 +1,87 @@
+*** Settings ***
+Documentation     Resource file of the *Women Category Page*.
+Resource          basePage.txt
+
+*** Variables ***
+#Side Menu Locators
+${loc_span_expandTopsSection_sideMenu_pWomenCategory}    xpath=//div[@id='categories_block_left']//a[contains(text(),'Tops')]/preceding-sibling::span    #Finds the span with the click event to expand the Tops Section.
+${loc_ul_topsSectionOptions_sideMenu_pWomenCategory}    xpath=//div[@id='categories_block_left']//a[contains(text(),'Tops')]/following-sibling::ul    #Finds the list of options displayed when the Tops Section is expanded.
+${loc_span_expandDressesSection_sideMenu_pWomenCategory}    xpath=//div[@id='categories_block_left']//a[contains(text(),'Dresses')]/preceding-sibling::span    #Finds the span with the click event to expand the Dresses Section.
+${loc_ul_dressesSectionOptions_sideMenu_pWomenCategory}    xpath=//div[@id='categories_block_left']//a[contains(text(),'Dresses')]/following-sibling::ul    #Finds the list of options displayed when the Dresses Section is expanded.
+#Center Area Locators
+${loc_span_categoryName_pWomenCategory}    xpath=//div[@class='content_scene_cat']//span[contains(text(),'Women')]    #Finds the category name above the banner, on the Women Category page.
+${loc_span_headingCounter_pWomenCategory}    css=span.heading-counter    #Finds the label with the message "There are N products" on the Women Category page.
+${loc_ul_productList_pWomenCategory}    css=ul.product_list    #Finds the products grid.
+${loc_li_product_pWomenCategory}    css=ul.product_list>li    #Finds all <li> intances in the products grid. This is used to count how many products are actually on the page.
+
+*** Keywords ***
+Verify Women Category Page Loaded
+    [Documentation]    Verify if *Women Category Page* loads.
+    Wait Until Element Is Visible    ${loc_span_categoryName_pWomenCategory}    ${WAIT}    Fail= The Women Category description is not visible. The page may not have loaded yet.
+
+Click Tops Section On Side Menu On Women Category Page
+    [Documentation]    Clicks on the + icon of the Tops section from the Side Menu.
+    Wait Until Element Is Visible    ${loc_span_expandTopsSection_sideMenu_pWomenCategory}    ${WAIT}    Fail=Tops + is not visible on the side menu.
+    Click Element    ${loc_span_expandTopsSection_sideMenu_pWomenCategory}
+
+Verify Tops Section Expanded On Side Menu On Women Category Page
+    [Documentation]    Verifies if the Tops section is really expanded.
+    Wait Until Element Is Visible    ${loc_ul_topsSectionOptions_sideMenu_pWomenCategory}    ${WAIT}    Fail=Tops Section is not expanded on the side menu.
+
+Click Dresses Section On Side Menu On Women Category Page
+    [Documentation]    Clicks on the + icon of the Dresses section from the Side Menu.
+    Wait Until Element Is Visible    ${loc_span_expandDressesSection_sideMenu_pWomenCategory}    ${WAIT}    Fail=Dresses + is not visible on the side menu.
+    Click Element    ${loc_span_expandDressesSection_sideMenu_pWomenCategory}
+
+Verify Dresses Section Expanded On Side Menu On Women Category Page
+    [Documentation]    Verifies if the Dresses section is really expanded.
+    Wait Until Element Is Visible    ${loc_ul_dressesSectionOptions_sideMenu_pWomenCategory}    ${WAIT}    Fail=Dresses Section is not expanded on the side menu.
+
+Get The Current Number Of Products On Women Category Page
+    [Documentation]    Returns the total number of products on the page.
+    Wait Until Element Is Visible    ${loc_ul_productList_pWomenCategory}    ${WAIT}    Fail=There are no products grid on the Women Category Page.
+    ${productsList}=    Get WebElements    ${loc_li_product_pWomenCategory}
+    ${numberOfProducts}=    Get Length    ${productsList}
+    Return From Keyword    ${numberOfProducts}
+
+Verify If There Are N Products Displayed On Women Category Page
+    [Arguments]    ${N}
+    [Documentation]    WRAPPER KEYWORD --> Verifies if there are N products displayed on the page.
+    ${currentNumberOfProds}=    Get The Current Number Of Products On Women Category Page
+    ${result}=    Run Keyword and Return Status    Should Be Equal As Integers    ${currentNumberOfProds}    ${N}
+    Return From Keyword    ${result}
+
+Verify If Heading Counter Is Correct On Women Category Page
+    [Arguments]    ${numberOfProducts}
+    [Documentation]    Verifies if the label "There are N products" is displayed AND correct.
+    Wait Until Element Is Visible    ${loc_span_headingCounter_pWomenCategory}    ${WAIT}    Fail=The label "There are N products" is not displayed on Women Category Page.
+    ${expectedMessage}=    Catenate    There are ${numberOfProducts} products.
+    Element Text Should Be    ${loc_span_headingCounter_pWomenCategory}    ${expectedMessage}    message=Heading Message is not correct.    ignore_case=true
+
+Get Product From Produc List On Women Category Page
+    [Arguments]    ${index}
+    [Documentation]    Returns the product of the corresponding index from the product list.
+    Wait Until Element Is Visible    ${loc_ul_productList_pWomenCategory}    ${WAIT}    Fail=There are no products grid on the Women Category Page.
+    ${productsList}=    Get WebElements    ${loc_li_product_pWomenCategory}
+    ${item}=    Get WebElement    @{productsList}[${index}]
+    Return From Keyword    ${item}
+
+Click Add To Cart Button Of The Product P From Quick View On Women Category Page
+    [Arguments]    ${index}
+    [Documentation]    WRAPPER KEYWORD --> Adds 1 item to the cart by clicking on the "Add To Cart" button from the product Quick View.
+    ${listIndex}=    Evaluate    ${index}-1
+    Execute Javascript    document.getElementsByClassName('product-image-container')[${listIndex}].scrollIntoView();
+    ${product}=    Get Product From Produc List On Women Category Page    ${listIndex}
+    Mouse Over    ${product}
+    ${buttonAddToCart}=    Catenate    css=ul.product_list>li:nth-of-type(${index}) a.ajax_add_to_cart_button
+    Wait Until Element Is Visible    ${buttonAddToCart}
+    Set Focus To Element    ${buttonAddToCart}
+    Click Element    ${buttonAddToCart}
+
+Verify If Shopping Cart Was Updated On Women Category Page
+    [Arguments]    ${itemsInShoppingCartBefore}    ${itemsInShoppingCartAfter}
+    [Documentation]    This keyword verifies if the shopping cart has been updated.
+    ${itemsInShoppingCartBefore}=    Run Keyword If    '${itemsInShoppingCartBefore}'== '' or '${itemsInShoppingCartBefore}'== 'None'    Set Variable    0
+    Run Keyword If    '${itemsInShoppingCartBefore}'=='${itemsInShoppingCartAfter}'    Return From Keyword    False
+    ...    ELSE IF    '${itemsInShoppingCartBefore}'<'${itemsInShoppingCartAfter}'    Return From Keyword    True
+    ...    ELSE IF    '${itemsInShoppingCartBefore}'>'${itemsInShoppingCartAfter}'    Return From Keyword    True

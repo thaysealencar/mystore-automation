@@ -1,0 +1,59 @@
+*** Settings ***
+Documentation     Resource file of the *Authentication Page*.
+Resource          basePage.txt
+
+*** Variables ***
+${loc_h1_pageTitle_pAuthentication}    xpath=//h1[contains(text(),'Authentication')]    # Finds the title of the page.
+${loc_form_createAccount_pAuthentication}    css=form#create-account_form    # Finds the "create an account form" on Authentication page.
+${loc_form_loginForm_pAuthentication}    css=form#login_form    #Finds the "login form" on Authentication page.
+${loc_input_email_loginForm_pAuthentication}    css=input#email    # Finds the Email field from the login form on Authentication page.
+${loc_input_password_loginForm_pAuthentication}    css=input#passwd    # Finds the Password field from the login form on Authentication page.
+${loc_button_signIn_loginForm_pAuthentication}    css=button#SubmitLogin    # Finds the Sing in button from the login form on Authentication page.
+
+*** Keywords ***
+Verify Authentication Page Loaded
+    [Documentation]    Verify if *Authentication page* loads.
+    Wait Until Element Is Visible    ${loc_h1_pageTitle_pAuthentication}    ${WAIT}    Fail= The title of Authentication Page is not visible. The page might still be loading.
+    Element Should Be Visible    ${loc_form_createAccount_pAuthentication}
+    Element Should Be Visible    ${loc_form_loginForm_pAuthentication}
+
+Input Email On Login Form On Authentication Page
+    [Arguments]    ${email}
+    [Documentation]    Fill out the email field.
+    ...    *Arguments:* - ${email}
+    Wait Until Element Is Visible    ${loc_input_email_loginForm_pAuthentication}    ${WAIT}    Fail= Email field is not visible on the login form.
+    Input Text    ${loc_input_email_loginForm_pAuthentication}    ${email}
+
+Input Password On Login Form On Authentication Page
+    [Arguments]    ${password}
+    [Documentation]    Fill out the password field.
+    ...
+    ...    *Arguments:*
+    ...    - ${password}
+    Wait Until Element Is Visible    ${loc_input_password_loginForm_pAuthentication}    ${WAIT}    Fail= Password field is not visible on the login form.
+    Input Text    ${loc_input_password_loginForm_pAuthentication}    ${password}
+
+Click Sign In Button On Login Form On Authentication Page
+    [Documentation]    Ensure the Login button is clicked.
+    ...
+    ...    *Arguments:* none
+    Wait Until Element Is Visible    ${loc_button_signIn_loginForm_pAuthentication}    ${WAIT}    Fail= "Sing In" button is not visible on the login form.
+    Click Element    ${loc_button_signIn_loginForm_pAuthentication}
+
+Populate Login Form On Authentication Page
+    [Arguments]    ${email}    ${password}
+    [Documentation]    *This is a WRAPPER KEYWORD!*
+    ...
+    ...    It combines the following keywords to execute the login:
+    ...
+    ...    -Input Email On Login Form
+    ...
+    ...    -Input Password On Login Form
+    ...
+    ...    *Arguments:*
+    ...    - ${email}
+    ...    - ${password}
+    Wait Until Element Is Visible    ${loc_form_loginForm_pAuthentication}    ${WAIT}    Fail= The Login form is not visible on the Authentication Page.
+    Input Email On Login Form On Authentication Page    ${email}
+    Input Password On Login Form On Authentication Page    ${password}
+    Sleep    2s

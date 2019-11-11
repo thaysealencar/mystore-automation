@@ -1,0 +1,23 @@
+*** Settings ***
+Library           String
+Library           Collections
+Library           ../../../../Python37/Lib/site-packages/SeleniumLibrary/
+
+*** Variables ***
+${BROWSER}        ${EMPTY}
+${ENVIRONMENT}    ${EMPTY}
+${VERSION}        ${EMPTY}
+${SERVER_URL}     ${EMPTY}
+${WAIT}           15s
+${USERNAME}       ${EMPTY}
+${PASSWORD}       ${EMPTY}
+${BASE_URL}       http://automationpractice.com/
+
+*** Keywords ***
+Generate URL
+    [Arguments]    ${path}
+    [Documentation]    Generates URLs --> BASE_URL + path
+    ...
+    ...    BASE_URL= http://automationpractice.com/
+    ${basePageURL} =    Catenate    SEPARATOR=    ${BASE_URL}    ${path}    #SEPARATOR=<empty> combines the strings without any spaces between then
+    Return from Keyword    ${basePageURL}

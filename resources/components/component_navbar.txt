@@ -1,0 +1,35 @@
+*** Settings ***
+Documentation     *This is the resource file of the Navbar.*
+...
+...               The *keywords* and *locators* defined in this file are used to test the *Navbar componenet*.
+Resource          ../main.txt
+
+*** Variables ***
+${loc_nav_cNavbar}    css=div.nav nav    # Finds the fixed navbar component itself
+${loc_a_signIn_cNavbar}    css=nav a.login    # Finds the "Sing in" link on the Navbar. | alternative xpath=//nav//a[contains(text(),'Sign in')]
+${loc_a_signOut_cNavbar}    caa=nav a.logout    # Finds the "Sing out" link on the Navbar. | alternative xpath=//nav//a[contains(text(),'Sign out')]
+${loc_a_username_cNavbar}    css=nav a.account    # Finds the username link on the Navbar. | alternative xpath=//a[contains(text(),'Sign in')]
+
+*** Keywords ***
+Is User Logged Out
+    [Documentation]    Verifies if user is logged out of the application.
+    ...
+    ...    if \ ${isSignInLinkVisible} == true (User is LOGGED OUT)
+    ...
+    ...    if \ ${isSignInLinkVisible} == false (User is LOGGED IN)
+    ${isSignInLinkVisible}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${loc_a_singIn_cNavbar}    ${WAIT}    Fail= The Sign In link is not visible on the Navbar.
+    Return From Keyword    ${isSignInLinkVisible}
+
+Is User Logged In
+    [Documentation]    Verifies if user is logged out of the application.
+    ...
+    ...    if \ ${isUsernameVisible} == true (User is LOGGED IN)
+    ...
+    ...    if \ ${isUsernameVisible} == false (User is LOGGED OUT)
+    ${isUsernameVisible}=    Run Keyword And Return Status    Wait Until Element Is Visible    ${loc_a_username_cNavbar}    ${WAIT}    Fail= The username is not visible on the Navbar.
+    Return From Keyword    ${isUsernameVisible}
+
+Click Sign In Link On Navbar
+    [Documentation]    *Arguments:* none
+    Wait Until Element Is Visible    ${loc_a_signIn_cNavbar}    ${WAIT}    Fail= "Sign In" link is not visible on the Navbar.
+    Click Element    ${loc_a_signIn_cNavbar}

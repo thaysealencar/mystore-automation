@@ -1,0 +1,11 @@
+*** Settings ***
+Documentation     *My Account page file.*
+Resource          basePage.txt
+
+*** Variables ***
+${loc_h2_pageTitle_pMyAccount}    css=    #Finds the title of My Accouunt page.
+
+*** Keywords ***
+Verify My Account Page Loaded
+    [Documentation]    Verify if *My Account Page* loads.
+    Wait Until Element Is Visible    ${loc_h2_pageTitle_pMyAccount}    ${WAIT}    Fail= My Account page title is not visible. The Login Page might still be loading.

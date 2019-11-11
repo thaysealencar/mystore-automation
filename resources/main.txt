@@ -1,0 +1,41 @@
+*** Settings ***
+Resource          setups.txt
+Resource          poms/basePage.txt
+Resource          poms/page_index.txt
+Resource          components/component_navbar.txt
+Resource          poms/page_myAccount.txt
+Resource          poms/page_createAnAccount.txt
+Resource          poms/page_cart.txt
+Resource          poms/page_authentication.txt
+Resource          components/component_topMenu.txt
+Resource          poms/page_women_category.txt
+
+*** Keywords ***
+Basic Selenium Test Teardown
+    [Documentation]    - Logs last location
+    ...    - Captures screenshot if test failed
+    ...    - Closes all browser windows without logging the user out of the application.
+    Log Location
+    Log Source
+    ${randomString}=    Set Variable    Generate Random String    5
+    Run Keyword If    "${PREV_TEST_STATUS}" == "FAIL"    Capture Page Screenshot    onFailScreenshot_${randomString}.png
+    Close All Browsers
+
+Application Logout Test Teardown
+    [Documentation]    - Logs last location
+    ...    - Captures screenshot if test failed
+    ...    - (to be implemented) Updates TestRail result for the test case
+    ...    - Logs user out of the application
+    ...    - Closes all browser windows
+    Click Username Link On LoggedInNavbar
+    sleep    2s
+    ${isDropdownExpanded}=    Is Username Dropdown Expanded On LoggedInNavbar
+    Should Be True    ${isDropdownExpanded}
+    Click Logout Link In Username Dropdown On LoggedInNavbar
+    sleep    4s
+    Verify Home Page Loaded
+    Log Location
+    Log Source
+    ${randomString}=    Set Variable    Generate Random String    5
+    Run Keyword If    "${TEST STATUS}" == "FAIL"    Capture Page Screenshot    onFailScreenshot_${randomString}.png
+    Close All Browsers

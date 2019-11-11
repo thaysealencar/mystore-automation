@@ -1,0 +1,23 @@
+*** Settings ***
+Documentation     Resource file of the *Cart Page*..
+Resource          basePage.txt
+
+*** Variables ***
+${loc_h1_pageTitle_pCartPage}    css=h1#cart_title
+${loc_p_alertMessage_pCartPage}    css=p.alert.alert-warning
+${loc_table_cartSummary_pCartPage}    css=table#cart_summary
+
+*** Keywords ***
+Verify Cart Page Loaded
+    [Documentation]    Verify if *Cart Page* loads.
+    Wait Until Element Is Visible    ${loc_h1_pageTitle_pCartPage}    ${WAIT}    Fail=The title of Cart Page is not visible. The page might still be loading.
+
+Verify If Shopping Cart Is Empty On Cart Page
+    [Documentation]    Verify if the shopping cart is empty on the *Cart Page*. The following steps are executed:
+    ...    1- Verifies if the page does not contain the table --> table#cart_summary (if this table is present, it means the cart is not emty).
+    ...    2- It verifies if the message "Your shopping cart is empty." is displayed on the Cart Page.
+    Page Should Not Contain Element    ${loc_table_cartSummary_pCartPage}
+    ${pAlertElement}=    Get WebElement    ${loc_p_alertMessage_pCartPage}
+    ${pContent}=    Get Text    ${pAlertElement}
+    Should Be Equal As Strings    Your shopping cart is empty.    ${pContent}    #it verifies if the m message is
+    Return From Keyword    True

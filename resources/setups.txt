@@ -1,0 +1,39 @@
+*** Settings ***
+Documentation     The setups resource file contains the preconditions that satisfy the test cases.
+Resource          main.txt
+
+*** Keywords ***
+Basic Selenium Test Setup
+    [Documentation]    - Any environment setup can be done here.
+    ...    - Generates base page URL
+    ...    - Opens browser
+    ...    - Maximizes browser window
+    ${url}=    Generate URL    index.php
+    Open Browser    about:blank    chrome    # OR just open browser ${url} ${BROWSER}
+    Go To    ${url}
+    Maximize Browser Window
+    Verify Index Page Loaded
+
+Logged Out User On Women Category Page Setup
+    [Documentation]    This is a *Setup Keyword* to be used for any test case that have as as preconditions:
+    ...
+    ...    1 - User is logged out of the application.
+    ...
+    ...    2 - User must be viewing Women Category Page
+    Basic Selenium Test Setup
+    Click Women Tab On TopMenu
+    Sleep    2s
+    Verify Women Category Page Loaded
+    Sleep    2s
+
+Logged Out User On Authentication Page Setup
+    [Documentation]    This is a *Setup Keyword* to be used for test cases that have as preconditions:
+    ...
+    ...    1 - User is logged out of the application.
+    ...
+    ...    2 - User must be viewing Authentication Page.
+    Basic Selenium Test Setup
+    Click Sign In Link On Navbar
+    Sleep    2s
+    Verify Authentication Page Loaded
+    Sleep    2s

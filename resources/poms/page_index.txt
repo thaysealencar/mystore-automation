@@ -1,0 +1,11 @@
+*** Settings ***
+Documentation     Resource file of the *Index Page*.
+Resource          basePage.txt
+
+*** Variables ***
+${loc_div_homeSliders_pIndex}    css=div#homepage-slider
+
+*** Keywords ***
+Verify Index Page Loaded
+    [Documentation]    Verify if *Home Page* loads.
+    Wait Until Element Is Visible    ${loc_div_homeSliders_pIndex}    ${WAIT}    Fail= The sliders are not visible on the Index Page. The page may not have loaded yet.

@@ -1,0 +1,13 @@
+*** Settings ***
+Documentation     *Create An Accouunt page file.*
+...
+...               The *keywords* and *locators (variables)* defined in this file belong to the *Create An Accouunt page*.
+Resource          basePage.txt
+
+*** Variables ***
+${loc_h2_pageTitle_pCreateAnAccount}    css=    #Finds the title of Create An Accouunt page.
+
+*** Keywords ***
+Verify Create An Accouunt Page Loaded
+    [Documentation]    Verify if *Create An Accouunt page* loads.
+    Wait Until Element Is Visible    ${loc_h2_pageTitle_pCreateAnAccount}    ${WAIT}    Fail= Create An Accouunt page title is not visible. The page might still be loading.
