@@ -31,4 +31,20 @@ master: my_store_automation_practice
 
 ---
 
+## Test Cases currently covered in this project
 
+* signInLink_verifyIfUserIsTakenToAuthenticationPage: This test case verifies if the Sign In link takes the user to the Authentication page.
+
+* signInButton_submitFormWithValidCredentials: This test case verifies if the user is able to log into the application using valid credentials.
+
+* womenTab_onClickLoadsWomenCategoryContent: This test case checks if the Women Tab is clicable and also if the Women Category page \ loaded after clicking on the tab.
+
+* shoppingCartWidget_verifyIfCartIsEmpty: This test case verifies if the Shopping Cart is empty, both on the Cart Widget (Top Menu) and the Cart Page.
+
+* sideMenu_expandTheTopsSection: This test case verifies if the Tops Section of the side menu is expandable.
+
+* sideMenu_expandTheDressesSection: This test case verifies if the Dresses Section of the side menu is expandable.
+
+* centerArea_verifyThatTheNumberOfPageProductsIsCorrect: This test case verifies if the number of products displayed on the page is correct. There should be 7 products.
+
+* centerArea_addItemToTheCartAndVerifyCartIsUpdated: This test case checks if the shopping cart gets updated once the user adds an item to it.
